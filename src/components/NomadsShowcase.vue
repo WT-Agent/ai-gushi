@@ -2,10 +2,10 @@
   <section class="nomads-showcase-section">
     <div class="showcase-header">
       <div class="header-left">
-        <h2 class="showcase-title">儿童故事与睡前童话实战模板库</h2>
-        <p class="showcase-subtitle">精选睡前安抚、习惯培养、冒险成长与经典新编案例，点击“一键套用”快速创作</p>
+        <h2 class="showcase-title">实战案例与模板库 (Nomads Showcase)</h2>
+        <p class="showcase-subtitle">精选高频实战场景，点击“一键套用”快速生成高质量结果</p>
       </div>
-      <span class="showcase-badge">已收录 {{ showcaseItems.length }} 个童话故事模板</span>
+      <span class="showcase-badge">已收录 {{ showcaseItems.length }} 个实战模板</span>
     </div>
 
     <div class="showcase-grid">
@@ -41,8 +41,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+const props = defineProps<{
+  appTitle?: string;
+  isImage?: boolean;
+}>();
+
 const emit = defineEmits<{
-  (e: 'apply-template', payload: { prompt: string; storyType?: string; ageGroup?: string; storyTheme?: string }): void;
+  (e: 'apply-template', payload: { prompt: string; style?: string }): void;
 }>();
 
 export interface ShowcaseItem {
@@ -50,81 +55,105 @@ export interface ShowcaseItem {
   tag: string;
   title: string;
   prompt: string;
-  storyType?: string;
-  ageGroup?: string;
-  storyTheme?: string;
+  style?: string;
   usageCount: string;
 }
 
-const showcaseItems = computed<ShowcaseItem[]>(() => [
-  {
-    id: 'gushi-1',
-    tag: '睡前安抚',
-    title: '小熊嘟嘟按时刷牙睡觉的奇妙晚安梦',
-    prompt: '小熊嘟嘟最喜欢吃甜甜的水蜜桃，但到了晚上总是磨蹭不想刷牙也不想上床。请创作一个充满奇幻色彩与安眠氛围的睡前童话，讲述牙齿小精灵与星光泡泡床的奇遇。',
-    storyType: '温暖治愈睡前童话',
-    ageGroup: '2-4岁幼儿',
-    storyTheme: '按时睡觉不挑食',
-    usageCount: '62.4k'
-  },
-  {
-    id: 'gushi-2',
-    tag: '勇敢成长',
-    title: '小松鼠皮皮的迷雾森林大冒险',
-    prompt: '小松鼠皮皮在彩虹森林里不小心迷路了，面对黑暗的树洞和怪异的声音，它如何凭借智慧、勇气以及小鸟朋友的帮助克服恐惧，找到回家的路。',
-    storyType: '动物王国科幻探险故事',
-    ageGroup: '5-7岁学龄前',
-    storyTheme: '勇敢自信',
-    usageCount: '58.1k'
-  },
-  {
-    id: 'gushi-3',
-    tag: '好习惯培养',
-    title: '不挑食的小企鹅波波与五彩蔬菜王国',
-    prompt: '小企鹅波波只喜欢吃冰淇淋，拒绝吃任何胡萝卜和西兰花，直到它乘坐魔法滑梯来到了五彩蔬菜王国，帮助蔬菜小精灵解除危机，学会了营养均衡。',
-    storyType: '好习惯培养与行为引导故事',
-    ageGroup: '2-4岁幼儿',
-    storyTheme: '按时睡觉不挑食',
-    usageCount: '49.8k'
-  },
-  {
-    id: 'gushi-4',
-    tag: '心理建构',
-    title: '大耳朵小飞象克服自卑的云端飞翔记',
-    prompt: '小飞象波波因为长着一对特别大的耳朵而被小伙伴嘲笑，但在一次大森林的风暴灾难中，它发现大耳朵能像翅膀一样飞翔，最终救了大家并建立自信。',
-    storyType: '好习惯培养与行为引导故事',
-    ageGroup: '5-7岁学龄前',
-    storyTheme: '勇敢自信',
-    usageCount: '44.3k'
-  },
-  {
-    id: 'gushi-5',
-    tag: '经典新编',
-    title: '守株待兔成语新编：小农夫的勤劳农场',
-    prompt: '用生动幽默且符合儿童理解的方式重编经典寓言守株待兔，让孩子们在快乐听故事的过程中明白不能寄希望于侥幸，只有勤劳付出才有收获。',
-    storyType: '经典寓言与成语新编',
-    ageGroup: '8-12岁小学生',
-    storyTheme: '诚实友善',
-    usageCount: '39.7k'
-  },
-  {
-    id: 'gushi-6',
-    tag: '科幻探索',
-    title: '星际小兔子波比的月球果冻矿山探索',
-    prompt: '小兔子波比驾驶着胡萝卜飞船前往遥远的草莓星球，途中遇到陨石带和外星伙伴，大家携手互助，共同寻找神奇的闪光能量矿石。',
-    storyType: '动物王国科幻探险故事',
-    ageGroup: '8-12岁小学生',
-    storyTheme: '探索自然',
-    usageCount: '36.5k'
+// 模拟实战案例数据库（支持根据文本/图像类及应用主题切换）
+const showcaseItems = computed<ShowcaseItem[]>(() => {
+  if (props.isImage) {
+    return [
+      {
+        id: 'img-1',
+        tag: '写真肖像',
+        title: '商务精英形象照',
+        prompt: '高端写字楼背景，身穿深蓝色西装，眼神自信专注，赛博朋克光影效果',
+        style: '<photography>',
+        usageCount: '18.5k'
+      },
+      {
+        id: 'img-2',
+        tag: '概念插画',
+        title: '未来科幻城市海报',
+        prompt: '霓虹灯光的赛博朋克立体城市，飞行汽车，高品质概念插画，8k分辨率',
+        style: '<illustration>',
+        usageCount: '24.1k'
+      },
+      {
+        id: 'img-3',
+        tag: '二次元动漫',
+        title: '日系国潮动漫角色',
+        prompt: '穿着现代汉服的国风少年，手持纸伞，水彩漫感，唯美光感与柔光滤镜',
+        style: '<anime>',
+        usageCount: '15.9k'
+      },
+      {
+        id: 'img-4',
+        tag: '水彩艺术',
+        title: '治愈系自然风景画',
+        prompt: '晨雾中的森林湖泊，阳光穿透树林，水彩渐变质感，温馨治愈风格',
+        style: '<watercolor>',
+        usageCount: '12.3k'
+      }
+    ];
+  } else {
+    return [
+      {
+        id: 'text-1',
+        tag: '职场总结',
+        title: '周报 OKR 成果提炼',
+        prompt: '本周完成了核心模块优化与线上异常排查，请帮我梳理为具备量化指标的 OKR 汇报文案',
+        style: '专业干练，结果导向',
+        usageCount: '32.8k'
+      },
+      {
+        id: 'text-2',
+        tag: '高情商沟通',
+        title: '拒绝不合理加班话术',
+        prompt: '领导在周末突然布置非紧急任务，如何高情商、委婉且有理有据地推迟到工作日处理？',
+        style: '高情商，委婉，有情调',
+        usageCount: '28.4k'
+      },
+      {
+        id: 'text-3',
+        tag: '短视频文案',
+        title: '知识干货吸睛开头',
+        prompt: '准备制作一条关于高效学习法的短视频，设计 3 个能在前 3 秒留住用户的爆款口播开头',
+        style: '专业干练，结果导向',
+        usageCount: '45.1k'
+      },
+      {
+        id: 'text-4',
+        tag: '商务公文',
+        title: '跨部门协同申请函',
+        prompt: '因项目上线需要研发部门配合联调，撰写一份正式、严谨且明确时间节点的协同申请书',
+        style: '专业干练，结果导向',
+        usageCount: '19.7k'
+      },
+      {
+        id: 'text-5',
+        tag: '小红书种草',
+        title: '实战干货笔记排版',
+        prompt: '分享 5 个提升日常工作效率的文字工具，语言亲切，搭配吸引人的标题与 Emoji 排版',
+        style: '高情商，委婉，有情调',
+        usageCount: '36.2k'
+      },
+      {
+        id: 'text-6',
+        tag: '学术润色',
+        title: '论文摘要与结论重构',
+        prompt: '将以下粗糙的研究结论重写为学术规范、逻辑严密且无语法语病的论文摘要总结',
+        style: '专业干练，结果导向',
+        usageCount: '22.0k'
+      }
+    ];
   }
-]);
+});
 
 function applyTemplate(item: ShowcaseItem) {
   emit('apply-template', {
     prompt: item.prompt,
-    storyType: item.storyType,
-    ageGroup: item.ageGroup,
-    storyTheme: item.storyTheme
+    style: item.style
   });
 }
 </script>
